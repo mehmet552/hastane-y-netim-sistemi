@@ -1,0 +1,1 @@
+# hastane-y-netim-sistemi
