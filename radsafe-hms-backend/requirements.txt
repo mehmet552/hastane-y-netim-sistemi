@@ -1,0 +1,14 @@
+fastapi[all]
+sqlalchemy
+asyncpg
+aiosqlite
+pydantic
+pydantic-settings
+passlib
+bcrypt==4.0.1
+python-jose[cryptography]
+alembic
+pytest
+httpx
+uvicorn
+python-multipart

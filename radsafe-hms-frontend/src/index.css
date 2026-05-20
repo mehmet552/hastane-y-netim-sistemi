@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-radsafe-bg text-radsafe-text font-sans antialiased overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at 15% 50%, rgba(67, 56, 202, 0.08), transparent 25%),
+      radial-gradient(circle at 85% 30%, rgba(6, 182, 212, 0.08), transparent 25%);
+    background-attachment: fixed;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+
+  /* Sleek Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-slate-800 rounded-full hover:bg-slate-700 transition-colors;
+  }
+}
+
+@layer components {
+  .premium-glass {
+    @apply bg-radsafe-panel/60 backdrop-blur-xl border border-white/[0.05] shadow-glass relative;
+  }
+  
+  .premium-glass::before {
+    content: '';
+    @apply absolute inset-0 rounded-[inherit] bg-glass-gradient pointer-events-none opacity-50;
+  }
+
+  .btn-primary {
+    @apply relative overflow-hidden bg-radsafe-primary text-white font-medium py-2.5 px-5 rounded-xl transition-all duration-300 shadow-neon hover:shadow-[0_0_25px_rgba(67,56,202,0.7)] hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2;
+  }
+
+  .btn-outline {
+    @apply border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 text-white font-medium py-2.5 px-5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2;
+  }
+
+  .input-field {
+    @apply w-full bg-black/50 border border-white/10 rounded-xl py-3 px-4 text-sm text-white focus:outline-none focus:border-radsafe-primary focus:bg-white/5 transition-all;
+  }
+}
