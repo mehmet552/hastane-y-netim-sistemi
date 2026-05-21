@@ -20,6 +20,9 @@ echo [BILGI] Backend bagimliliklari kontrol ediliyor...
 call venv\Scripts\activate
 pip install -r requirements.txt
 
+echo [BILGI] Port 8000 uzerindeki eski backend kapatiliyor...
+for /f "tokens=5" %%a in ('netstat -ano ^| findstr :8000 ^| findstr LISTENING') do taskkill /F /PID %%a >nul 2>&1
+
 echo [BILGI] FastAPI Backend baslatiliyor...
 start "RADSAFE Backend" cmd /k "call venv\Scripts\activate && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
 cd ..

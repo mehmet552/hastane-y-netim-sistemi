@@ -84,11 +84,76 @@ async def get_my_exposure(
     total_duration = await rule_engine.calculate_daily_duration(db, profile.id)
     open_log = await rule_engine.get_open_log(db, profile.id)
 
+    area_name = None
+    shift_started_at = None
+    if open_log and open_log.entry_time:
+        shift_started_at = open_log.entry_time.strftime("%H:%M:%S")
+        if open_log.area_id:
+            area_row = await db.get(RestrictedArea, open_log.area_id)
+            area_name = area_row.name if area_row else None
+
+    remaining = max(0, profile.max_daily_radiation_limit_minutes - total_duration)
+
     return {
         "daily_minutes": round(total_duration, 1),
         "max_minutes": profile.max_daily_radiation_limit_minutes,
+        "remaining_minutes": round(remaining, 1),
         "is_inside": open_log is not None,
+        "shift_started_at": shift_started_at,
+        "current_area": area_name,
     }
+
+
+@router.get("/live-personnel")
+async def get_live_personnel(
+    db: AsyncSession = Depends(get_db),
+    _: User = Depends(deps.RoleChecker(["view_logs"])),
+):
+    """Tüm personelin canlı maruziyet ve kalan süre özeti."""
+    areas_result = await db.execute(select(RestrictedArea))
+    area_names = {a.id: a.name for a in areas_result.scalars().all()}
+
+    result = await db.execute(
+        select(PersonnelProfile)
+        .options(
+            selectinload(PersonnelProfile.user).selectinload(User.role),
+            selectinload(PersonnelProfile.department),
+        )
+        .order_by(PersonnelProfile.id)
+    )
+    profiles = result.scalars().all()
+    rule_engine = LegalRuleEngine()
+    response_data = []
+
+    for p in profiles:
+        if not p.user or not p.user.is_active:
+            continue
+
+        total_duration = await rule_engine.calculate_daily_duration(db, p.id)
+        open_log = await rule_engine.get_open_log(db, p.id)
+        max_m = p.max_daily_radiation_limit_minutes
+        remaining = max(0, max_m - total_duration)
+        percent = round(min((total_duration / max_m) * 100, 100), 1) if max_m else 0
+
+        response_data.append({
+            "personnel_id": p.id,
+            "username": p.user.username,
+            "personnel_name": f"{p.first_name} {p.last_name}",
+            "department": p.department.name if p.department else "—",
+            "role_name": p.user.role.name if p.user.role else "",
+            "daily_minutes": round(total_duration, 1),
+            "max_minutes": max_m,
+            "remaining_minutes": round(remaining, 1),
+            "percent": percent,
+            "is_inside": open_log is not None,
+            "shift_started_at": (
+                open_log.entry_time.strftime("%H:%M:%S") if open_log and open_log.entry_time else None
+            ),
+            "current_area": area_names.get(open_log.area_id) if open_log else None,
+        })
+
+    response_data.sort(key=lambda x: (-int(x["is_inside"]), -x["percent"]))
+    return response_data
 
 
 @router.get("/areas")

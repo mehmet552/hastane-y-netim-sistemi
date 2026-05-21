@@ -86,6 +86,9 @@ class EmployeeResponse(BaseModel):
     is_active: bool = True
 
 # Access Control Schemas
+class ShiftActionRequest(BaseModel):
+    area_id: int = 1
+
 class AccessScanRequest(BaseModel):
     rfid_tag: str
     area_id: int
