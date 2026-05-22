@@ -1,3 +1,6 @@
+<img width="1904" height="843" alt="Ekran görüntüsü 2026-05-21 222718" src="https://github.com/user-attachments/assets/9841dc67-cd39-420a-b1f9-d4a74749ad17" />
+<img width="1918" height="852" alt="Ekran görüntüsü 2026-05-21 222438" src="https://github.com/user-attachments/assets/02842120-305a-4491-96ba-ccb57ff31181" />
+<img width="1848" height="857" alt="Ekran görüntüsü 2026-05-21 222656" src="https://github.com/user-attachments/assets/2262299f-4c60-48e3-af63-440d97a7a3ab" />
 # RADSAFE HMS — Hastane Radyasyon Güvenliği Yönetim Sistemi
 
 Hastane personelinin radyasyonlu alanlara giriş–çıkışını RFID/QR ile izleyen, günlük maruziyet süresini hesaplayan ve yasal limitlere göre erişimi kontrol eden web tabanlı bir yönetim sistemidir.
